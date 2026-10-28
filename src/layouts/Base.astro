@@ -1,7 +1,9 @@
 ---
 import '../styles/global.css';
-import { ui, languages, base, type Lang } from '../i18n/ui';
+import { getCollection } from 'astro:content';
+import { ui, languages, base, categories, type Lang } from '../i18n/ui';
 interface Props {
+  category?: string; // 사이드바에서 강조할 카테고리
   lang: Lang;
   title: string;
   description: string;
@@ -10,8 +12,11 @@ interface Props {
   type?: 'website' | 'article';
   date?: Date;
 }
-const { lang, title, description, path, altPath, type = 'website', date } = Astro.props;
+const { lang, title, description, path, altPath, type = 'website', date, category } = Astro.props;
 const t = ui[lang];
+const langPosts = (await getCollection('posts')).filter((p) => p.data.lang === lang);
+const catCounts = categories.map((c) => ({ ...c, count: langPosts.filter((p) => p.data.category === c.slug).length }));
+const isHome = path === '/';
 const site = Astro.site!.origin;
 const url = (l: string, p: string) => `${site}${base}/${l}${p}`;
 const canonical = url(lang, path);
@@ -54,7 +59,24 @@ const ld = type === 'article'
         </nav>
       </div>
     </header>
-    <main class="container"><slot /></main>
+    <div class="layout">
+      <aside class="sidebar">
+        <nav class="cat-nav" aria-label={t.categories}>
+          <div class="cat-nav-title">{t.categories}</div>
+          <a href={`${base}/${lang}/`} aria-current={isHome ? 'page' : undefined}>
+            <span>{t.all}</span><span class="count">{langPosts.length}</span>
+          </a>
+          {catCounts.map((c) => c.count > 0 ? (
+            <a href={`${base}/${lang}/category/${c.slug}/`} aria-current={category === c.slug ? 'page' : undefined}>
+              <span>{c[lang]}</span><span class="count">{c.count}</span>
+            </a>
+          ) : (
+            <span class="disabled"><span>{c[lang]}</span><span class="count">0</span></span>
+          ))}
+        </nav>
+      </aside>
+      <main><slot /></main>
+    </div>
     <footer class="site-footer">
       <div class="container">
         <span>© {new Date().getFullYear()}</span>

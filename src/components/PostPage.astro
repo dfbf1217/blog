@@ -14,7 +14,7 @@ const alt = all.find(
 );
 const altPath = alt ? `/posts/${slugOf(alt.id)}/` : undefined;
 ---
-<Base lang={lang} title={post.data.title} description={post.data.description} path={`/posts/${slug}/`} altPath={altPath} type="article" date={post.data.date}>
+<Base lang={lang} title={post.data.title} description={post.data.description} path={`/posts/${slug}/`} altPath={altPath} type="article" date={post.data.date} category={post.data.category}>
   <article>
     <header class="post-header">
       <a class="post-category" href={`${base}/${lang}/category/${post.data.category}/`}>{categoryName(post.data.category, lang)}</a>

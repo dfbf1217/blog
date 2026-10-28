@@ -1,32 +1,25 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { ui, base, slugOf, readingMinutes, fmtDate, categories, categoryName, type Lang } from '../i18n/ui';
+import { ui, base, slugOf, readingMinutes, fmtDate, categoryName, type Lang } from '../i18n/ui';
 const { lang, category } = Astro.props as { lang: Lang; category?: string };
 const t = ui[lang];
 const all = (await getCollection('posts')).filter((p) => p.data.lang === lang);
 const posts = all
   .filter((p) => !category || p.data.category === category)
   .sort((a, b) => +b.data.date - +a.data.date);
-// 글이 있는 카테고리만 탭으로 노출
-const tabs = categories.filter((c) => all.some((p) => p.data.category === c.slug));
 const title = category ? categoryName(category, lang) : t.siteTitle;
 const path = category ? `/category/${category}/` : '/';
 ---
-<Base lang={lang} title={title} description={t.tagline} path={path}>
+<Base lang={lang} title={title} description={t.tagline} path={path} category={category}>
   {!category && (
     <section class="hero">
       <h1>{t.heroTitle}</h1>
       <p>{t.tagline}</p>
     </section>
   )}
+  {category && <h1 class="page-title">{title}</h1>}
 
-  <nav class="category-tabs" aria-label="categories">
-    <a href={`${base}/${lang}/`} aria-current={!category ? 'page' : undefined}>{t.all}</a>
-    {tabs.map((c) => (
-      <a href={`${base}/${lang}/category/${c.slug}/`} aria-current={category === c.slug ? 'page' : undefined}>{c[lang]}</a>
-    ))}
-  </nav>
 
   {posts.length === 0 ? <p class="empty">{t.empty}</p> : (
     <ul class="post-list">
