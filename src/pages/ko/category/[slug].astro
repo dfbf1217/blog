@@ -1,0 +1,14 @@
+---
+import { getCollection } from 'astro:content';
+import IndexPage from '../../../components/IndexPage.astro';
+import { categories } from '../../../i18n/ui';
+// 글이 있는 카테고리만 페이지 생성 (빈 페이지가 검색에 잡히지 않게)
+export async function getStaticPaths() {
+  const posts = (await getCollection('posts')).filter((p) => p.data.lang === 'ko');
+  return categories
+    .filter((c) => posts.some((p) => p.data.category === c.slug))
+    .map((c) => ({ params: { slug: c.slug } }));
+}
+const { slug } = Astro.params;
+---
+<IndexPage lang="ko" category={slug} />

@@ -16,6 +16,8 @@ const get = (k) => fm[1].match(new RegExp(`^${k}:\\s*(.+)$`, 'm'))?.[1].trim().r
 const lang = get('lang');
 if (!['ko', 'en'].includes(lang)) { console.error(`lang이 ko/en이 아닙니다: ${lang}`); process.exit(1); }
 for (const k of ['title', 'description', 'date']) if (!get(k)) { console.error(`${k} 누락`); process.exit(1); }
+const categories = JSON.parse(fs.readFileSync(path.join(root, 'src', 'data', 'categories.json'), 'utf8')).map((c) => c.slug);
+if (!categories.includes(get('category'))) { console.error(`category는 ${categories.join('/')} 중 하나여야 합니다: ${get('category')}`); process.exit(1); }
 if (/\[REDACTED\]|sk-[A-Za-z0-9]{16,}/.test(text)) console.warn('경고: 마스킹 흔적/비밀키 패턴이 있습니다. 다시 확인하세요.');
 
 const slug = (slugArg ?? path.basename(src, '.md').replace(/^\d{4}-\d{2}-\d{2}-/, '')).toLowerCase().replace(/[^a-z0-9-]+/g, '-');

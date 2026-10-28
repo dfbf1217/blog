@@ -1,0 +1,5 @@
+[
+  { "slug": "devlog", "ko": "개발일지", "en": "Dev Log" },
+  { "slug": "startup", "ko": "창업·행정", "en": "Startup & Admin" },
+  { "slug": "retro", "ko": "회고", "en": "Retrospective" }
+]

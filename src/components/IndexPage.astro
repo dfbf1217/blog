@@ -1,20 +1,33 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { ui, base, slugOf, readingMinutes, fmtDate, type Lang } from '../i18n/ui';
-const { lang } = Astro.props as { lang: Lang };
+import { ui, base, slugOf, readingMinutes, fmtDate, categories, categoryName, type Lang } from '../i18n/ui';
+const { lang, category } = Astro.props as { lang: Lang; category?: string };
 const t = ui[lang];
-const posts = (await getCollection('posts'))
-  .filter((p) => p.data.lang === lang)
+const all = (await getCollection('posts')).filter((p) => p.data.lang === lang);
+const posts = all
+  .filter((p) => !category || p.data.category === category)
   .sort((a, b) => +b.data.date - +a.data.date);
+// 글이 있는 카테고리만 탭으로 노출
+const tabs = categories.filter((c) => all.some((p) => p.data.category === c.slug));
+const title = category ? categoryName(category, lang) : t.siteTitle;
+const path = category ? `/category/${category}/` : '/';
 ---
-<Base lang={lang} title={t.siteTitle} description={t.tagline} path="/">
-  <section class="hero">
-    <h1>{t.heroTitle}</h1>
-    <p>{t.tagline}</p>
-  </section>
+<Base lang={lang} title={title} description={t.tagline} path={path}>
+  {!category && (
+    <section class="hero">
+      <h1>{t.heroTitle}</h1>
+      <p>{t.tagline}</p>
+    </section>
+  )}
 
-  <h2 class="section-title">{t.latest}</h2>
+  <nav class="category-tabs" aria-label="categories">
+    <a href={`${base}/${lang}/`} aria-current={!category ? 'page' : undefined}>{t.all}</a>
+    {tabs.map((c) => (
+      <a href={`${base}/${lang}/category/${c.slug}/`} aria-current={category === c.slug ? 'page' : undefined}>{c[lang]}</a>
+    ))}
+  </nav>
+
   {posts.length === 0 ? <p class="empty">{t.empty}</p> : (
     <ul class="post-list">
       {posts.map((p) => (
@@ -23,6 +36,8 @@ const posts = (await getCollection('posts'))
             <h2>{p.data.title}</h2>
             <p>{p.data.description}</p>
             <div class="meta">
+              {!category && <span class="cat">{categoryName(p.data.category, lang)}</span>}
+              {!category && <span class="dot" />}
               <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date, lang)}</time>
               <span class="dot" />
               <span>{t.minRead(readingMinutes(p.body, lang))}</span>

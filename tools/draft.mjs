@@ -16,6 +16,7 @@ import { spawnSync } from 'node:child_process';
 const root = path.resolve(import.meta.dirname, '..');
 const logsDir = path.join(os.homedir(), '.claude', 'projects');
 const projects = JSON.parse(fs.readFileSync(path.join(root, 'projects.json'), 'utf8'));
+const categories = JSON.parse(fs.readFileSync(path.join(root, 'src', 'data', 'categories.json'), 'utf8'));
 const statePath = path.join(root, 'tools', '.state.json');
 const state = fs.existsSync(statePath) ? JSON.parse(fs.readFileSync(statePath, 'utf8')) : { done: [] };
 
@@ -94,6 +95,7 @@ function buildPrompt(proj, meta, transcript) {
 - 검색될 만한 구체적 제목(문제 상황이 드러나게). 과장·낚시 금지.
 - 코드는 핵심만 짧게. API 키, 내부 경로, 개인정보는 절대 넣지 않는다.
 - 분량 800~1500자 ${ko ? '' : '(words: 400-800)'}. 소제목(##) 사용.
+${ko ? '- 말투는 친근한 "~해요" 체로 통일한다. 딱딱한 보고서체 금지. "ㅋㅋ" 같은 인터넷 표현은 쓰지 않는다.\n' : ''}- category는 다음 중 하나: ${categories.map((c) => `${c.slug}(${c.ko})`).join(', ')}
 
 출력 형식 — 아래 frontmatter로 시작하는 마크다운만 출력하고 다른 설명은 붙이지 않는다:
 ---
@@ -101,6 +103,7 @@ title: "..."
 description: "검색 결과에 노출될 1~2문장 요약(120자 이내)"
 date: ${(meta.last ?? new Date().toISOString()).slice(0, 10)}
 lang: ${proj.lang}
+category: devlog
 project: ${proj.name}
 tags: [3~5개]
 ---
