@@ -1,0 +1,133 @@
+:root {
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --text: #1d1d1f;
+  --muted: #6e6e73;
+  --line: #e7e7e4;
+  --accent: #2f6fed;
+  --accent-soft: #eaf1fe;
+  --code-bg: #f4f4f2;
+  --radius: 12px;
+  --maxw: 44rem;
+  --font: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --mono: ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111113;
+    --surface: #18181b;
+    --text: #ececec;
+    --muted: #9a9aa1;
+    --line: #2a2a2e;
+    --accent: #7aa7ff;
+    --accent-soft: #1b2638;
+    --code-bg: #1c1c20;
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.8;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+/* ---------- header / footer ---------- */
+.site-header { border-bottom: 1px solid var(--line); position: sticky; top: 0; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: saturate(180%) blur(12px); z-index: 10; }
+.site-header .container { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+.brand { font-weight: 800; font-size: 1.05rem; text-decoration: none; letter-spacing: -0.02em; }
+.brand span { color: var(--accent); }
+.nav { display: flex; gap: 6px; align-items: center; font-size: 0.9rem; }
+.nav a { text-decoration: none; color: var(--muted); padding: 6px 10px; border-radius: 8px; }
+.nav a:hover { color: var(--text); background: var(--code-bg); }
+
+.site-footer { border-top: 1px solid var(--line); margin-top: 96px; padding: 32px 0 48px; color: var(--muted); font-size: 0.85rem; }
+.site-footer .container { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.site-footer a { color: var(--muted); text-decoration: none; }
+.site-footer a:hover { color: var(--text); }
+.site-footer .links { display: flex; gap: 16px; }
+
+main { padding-top: 48px; }
+
+/* ---------- home ---------- */
+.hero { padding: 24px 0 40px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+.hero h1 { font-size: 2rem; line-height: 1.3; margin: 0 0 12px; letter-spacing: -0.03em; }
+.hero p { margin: 0; color: var(--muted); font-size: 1.05rem; }
+
+.section-title { font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin: 32px 0 8px; }
+
+.post-list { list-style: none; padding: 0; margin: 0; }
+.post-item { border-bottom: 1px solid var(--line); }
+.post-item:last-child { border-bottom: 0; }
+.post-item a { display: block; padding: 24px 0; text-decoration: none; }
+.post-item h2 { font-size: 1.25rem; line-height: 1.45; margin: 0 0 6px; letter-spacing: -0.02em; transition: color 0.15s; }
+.post-item a:hover h2 { color: var(--accent); }
+.post-item p { margin: 0 0 10px; color: var(--muted); font-size: 0.95rem; line-height: 1.65; }
+
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; color: var(--muted); font-size: 0.85rem; }
+.meta .dot::before { content: '·'; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 0.78rem; padding: 2px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); line-height: 1.6; }
+
+.empty { color: var(--muted); padding: 40px 0; }
+
+/* ---------- post ---------- */
+.post-header { margin-bottom: 40px; }
+.post-header h1 { font-size: 2.1rem; line-height: 1.35; margin: 0 0 16px; letter-spacing: -0.035em; }
+.post-header .tags { margin-top: 14px; }
+
+.prose { font-size: 1.05rem; }
+.prose > :first-child { margin-top: 0; }
+.prose p { margin: 0 0 1.4em; }
+.prose h2 { font-size: 1.45rem; line-height: 1.4; margin: 2.4em 0 0.8em; letter-spacing: -0.025em; }
+.prose h3 { font-size: 1.15rem; margin: 2em 0 0.6em; }
+.prose a { color: var(--accent); text-underline-offset: 3px; }
+.prose strong { font-weight: 700; }
+.prose ul, .prose ol { padding-left: 1.3em; margin: 0 0 1.4em; }
+.prose li { margin: 0.35em 0; }
+.prose li::marker { color: var(--muted); }
+.prose blockquote { margin: 0 0 1.4em; padding: 14px 18px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 var(--radius) var(--radius) 0; }
+.prose blockquote p:last-child { margin-bottom: 0; }
+.prose hr { border: 0; border-top: 1px solid var(--line); margin: 3em 0; }
+.prose img { max-width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); }
+.prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.4em; font-size: 0.95rem; display: block; overflow-x: auto; }
+.prose th, .prose td { border-bottom: 1px solid var(--line); padding: 10px 12px; text-align: left; }
+.prose th { font-weight: 700; }
+
+.prose code { font-family: var(--mono); font-size: 0.88em; background: var(--code-bg); padding: 0.15em 0.4em; border-radius: 6px; }
+.prose pre { font-family: var(--mono); font-size: 0.88rem; line-height: 1.65; padding: 18px 20px; border-radius: var(--radius); border: 1px solid var(--line); overflow-x: auto; margin: 0 0 1.4em; }
+.prose pre code { background: none; padding: 0; font-size: inherit; }
+
+/* shiki: 라이트/다크 테마 전환 */
+@media (prefers-color-scheme: dark) {
+  .astro-code, .astro-code span { color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important; }
+}
+
+.post-footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line); }
+.back-link { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
+.back-link:hover { color: var(--accent); }
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  main { padding-top: 32px; }
+  .hero h1 { font-size: 1.6rem; }
+  .post-header h1 { font-size: 1.65rem; }
+  .prose { font-size: 1rem; }
+}

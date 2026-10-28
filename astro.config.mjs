@@ -7,6 +7,9 @@ export default defineConfig({
   site: 'https://dfbf1217.github.io',
   base: '/blog',
   trailingSlash: 'always',
+  markdown: {
+    shikiConfig: { themes: { light: 'github-light', dark: 'github-dark' } },
+  },
   integrations: [
     sitemap({
       i18n: { defaultLocale: 'ko', locales: { ko: 'ko-KR', en: 'en-US' } },

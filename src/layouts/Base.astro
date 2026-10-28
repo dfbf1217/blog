@@ -1,4 +1,5 @@
 ---
+import '../styles/global.css';
 import { ui, languages, base, type Lang } from '../i18n/ui';
 interface Props {
   lang: Lang;
@@ -15,6 +16,7 @@ const site = Astro.site!.origin;
 const url = (l: string, p: string) => `${site}${base}/${l}${p}`;
 const canonical = url(lang, path);
 const other: Lang = lang === 'ko' ? 'en' : 'ko';
+const pageTitle = path === '/' ? t.siteTitle : `${title} | ${t.siteTitle}`;
 const ld = type === 'article'
   ? { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: title, description, inLanguage: lang, datePublished: date?.toISOString(), mainEntityOfPage: canonical }
   : { '@context': 'https://schema.org', '@type': 'Blog', name: t.siteTitle, inLanguage: lang, url: canonical };
@@ -24,39 +26,45 @@ const ld = type === 'article'
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>{title}</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang={lang} href={canonical} />
     {altPath && <link rel="alternate" hreflang={other} href={url(other, altPath)} />}
     <link rel="alternate" type="application/rss+xml" title={t.siteTitle} href={`${base}/${lang}/rss.xml`} />
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+    <meta property="og:site_name" content={t.siteTitle} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={type} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'ko' ? 'ko_KR' : 'en_US'} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-    <style>
-      :root { color-scheme: light dark; }
-      body { max-width: 42rem; margin: 0 auto; padding: 1rem 1rem 4rem; font: 17px/1.75 system-ui, -apple-system, 'Segoe UI', sans-serif; }
-      header { display: flex; justify-content: space-between; align-items: baseline; padding: 1rem 0; border-bottom: 1px solid #8884; margin-bottom: 2rem; }
-      header a { text-decoration: none; }
-      .brand { font-weight: 700; font-size: 1.15rem; }
-      pre { overflow-x: auto; padding: 1rem; background: #8881; border-radius: 6px; font-size: 0.9rem; }
-      code { font-size: 0.92em; }
-      img { max-width: 100%; }
-      .meta { color: #888; font-size: 0.9rem; }
-      ul.posts { list-style: none; padding: 0; }
-      ul.posts li { margin: 1.5rem 0; }
-      ul.posts a { font-weight: 600; font-size: 1.1rem; }
-    </style>
   </head>
   <body>
-    <header>
-      <a class="brand" href={`${base}/${lang}/`}>{t.siteTitle}</a>
-      <nav>
-        <a href={`${base}/${other}${altPath ?? '/'}`} hreflang={other}>{languages[other]}</a>
-      </nav>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href={`${base}/${lang}/`}>{t.siteTitle}<span>.</span></a>
+        <nav class="nav">
+          <a href={`${base}/${lang}/rss.xml`}>RSS</a>
+          <a href={`${base}/${other}${altPath ?? '/'}`} hreflang={other}>{languages[other]}</a>
+        </nav>
+      </div>
     </header>
-    <main><slot /></main>
+    <main class="container"><slot /></main>
+    <footer class="site-footer">
+      <div class="container">
+        <span>© {new Date().getFullYear()} {t.siteTitle}</span>
+        <div class="links">
+          <a href="https://github.com/dfbf1217" rel="me">GitHub</a>
+          <a href={`${base}/${lang}/rss.xml`}>RSS</a>
+        </div>
+      </div>
+    </footer>
+    <!-- Cloudflare Web Analytics -->
+    <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "7977fcd2f451433692c51d238f0e335b"}'></script>
   </body>
 </html>

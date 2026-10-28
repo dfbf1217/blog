@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { ui, base, slugOf, type Lang } from '../i18n/ui';
+import { ui, base, slugOf, readingMinutes, fmtDate, type Lang } from '../i18n/ui';
 const { lang } = Astro.props as { lang: Lang };
 const t = ui[lang];
 const posts = (await getCollection('posts'))
@@ -9,15 +9,25 @@ const posts = (await getCollection('posts'))
   .sort((a, b) => +b.data.date - +a.data.date);
 ---
 <Base lang={lang} title={t.siteTitle} description={t.tagline} path="/">
-  <p>{t.tagline}</p>
-  <h2>{t.latest}</h2>
-  {posts.length === 0 ? <p>{t.empty}</p> : (
-    <ul class="posts">
+  <section class="hero">
+    <h1>{t.heroTitle}</h1>
+    <p>{t.tagline}</p>
+  </section>
+
+  <h2 class="section-title">{t.latest}</h2>
+  {posts.length === 0 ? <p class="empty">{t.empty}</p> : (
+    <ul class="post-list">
       {posts.map((p) => (
-        <li>
-          <a href={`${base}/${lang}/posts/${slugOf(p.id)}/`}>{p.data.title}</a>
-          <div class="meta"><time datetime={p.data.date.toISOString()}>{p.data.date.toISOString().slice(0, 10)}</time></div>
-          <div>{p.data.description}</div>
+        <li class="post-item">
+          <a href={`${base}/${lang}/posts/${slugOf(p.id)}/`}>
+            <h2>{p.data.title}</h2>
+            <p>{p.data.description}</p>
+            <div class="meta">
+              <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date, lang)}</time>
+              <span class="dot" />
+              <span>{t.minRead(readingMinutes(p.body, lang))}</span>
+            </div>
+          </a>
         </li>
       ))}
     </ul>
