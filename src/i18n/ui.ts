@@ -2,9 +2,9 @@ export const languages = { ko: '한국어', en: 'English' } as const;
 export type Lang = keyof typeof languages;
 export const ui = {
   ko: {
-    siteTitle: '개발새발 로그',
+    siteTitle: '개발새발 블로그',
     tagline: '대구에서 웹·앱을 만드는 1인 개발자의 기록. 무엇을 왜 만들었고, 어디서 막혔는지 남깁니다.',
-    heroTitle: '만들면서 한 생각들을 기록합니다',
+    heroTitle: '1인 개발자 기록',
     latest: '최근 글',
     empty: '아직 글이 없습니다.',
     minRead: (n: number) => `${n}분`,
