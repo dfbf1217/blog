@@ -1,0 +1,12 @@
+---
+import { getCollection } from 'astro:content';
+import PostPage from '../../../components/PostPage.astro';
+import { slugOf } from '../../../i18n/ui';
+const LANG = 'ko';
+export async function getStaticPaths() {
+  const posts = (await getCollection('posts')).filter((p) => p.data.lang === 'ko');
+  return posts.map((p) => ({ params: { slug: slugOf(p.id) } }));
+}
+const { slug } = Astro.params;
+---
+<PostPage lang={LANG as 'ko' | 'en'} slug={slug!} />

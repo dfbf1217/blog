@@ -1,0 +1,21 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { slugOf, type Lang } from '../i18n/ui';
+const { lang, slug } = Astro.props as { lang: Lang; slug: string };
+const all = await getCollection('posts');
+const post = all.find((p) => p.data.lang === lang && slugOf(p.id) === slug)!;
+const { Content } = await render(post);
+// 번역본 연결: 내가 translationOf를 갖고 있거나, 상대가 나를 가리키는 경우
+const alt = all.find(
+  (p) => p.data.lang !== lang && (slugOf(p.id) === post.data.translationOf || p.data.translationOf === slug),
+);
+const altPath = alt ? `/posts/${slugOf(alt.id)}/` : undefined;
+---
+<Base lang={lang} title={post.data.title} description={post.data.description} path={`/posts/${slug}/`} altPath={altPath} type="article" date={post.data.date}>
+  <article>
+    <h1>{post.data.title}</h1>
+    <div class="meta"><time datetime={post.data.date.toISOString()}>{post.data.date.toISOString().slice(0, 10)}</time></div>
+    <Content />
+  </article>
+</Base>
