@@ -16,8 +16,9 @@
   color-scheme: light;
 }
 
+/* 다크: 시스템 설정을 따르되, 토글로 고른 테마(data-theme)가 우선 */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #111113;
     --surface: #18181b;
     --text: #ececec;
@@ -28,6 +29,17 @@
     --code-bg: #1c1c20;
     color-scheme: dark;
   }
+}
+:root[data-theme='dark'] {
+  --bg: #111113;
+  --surface: #18181b;
+  --text: #ececec;
+  --muted: #9a9aa1;
+  --line: #2a2a2e;
+  --accent: #7aa7ff;
+  --accent-soft: #1b2638;
+  --code-bg: #1c1c20;
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -59,6 +71,15 @@ a { color: inherit; }
 .nav { display: flex; gap: 6px; align-items: center; font-size: 0.9rem; }
 .nav a { text-decoration: none; color: var(--muted); padding: 6px 10px; border-radius: 8px; }
 .nav a:hover { color: var(--text); background: var(--code-bg); }
+.theme-toggle { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer; }
+.theme-toggle:hover { color: var(--text); background: var(--code-bg); }
+.theme-toggle .icon-sun { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .theme-toggle .icon-sun { display: block; }
+  :root:not([data-theme='light']) .theme-toggle .icon-moon { display: none; }
+}
+:root[data-theme='dark'] .theme-toggle .icon-sun { display: block; }
+:root[data-theme='dark'] .theme-toggle .icon-moon { display: none; }
 
 .site-footer { border-top: 1px solid var(--line); margin-top: 96px; padding: 32px 0 48px; color: var(--muted); font-size: 0.85rem; }
 .site-footer .container { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -150,8 +171,9 @@ main { padding-top: 48px; min-width: 0; max-width: var(--maxw); }
 
 /* shiki: 라이트/다크 테마 전환 */
 @media (prefers-color-scheme: dark) {
-  .astro-code, .astro-code span { color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important; }
+  :root:not([data-theme='light']) :is(.astro-code, .astro-code span) { color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important; }
 }
+:root[data-theme='dark'] :is(.astro-code, .astro-code span) { color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important; }
 
 .post-footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line); }
 .back-link { color: var(--muted); text-decoration: none; font-size: 0.9rem; }

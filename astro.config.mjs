@@ -12,7 +12,7 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      i18n: { defaultLocale: 'ko', locales: { ko: 'ko-KR', en: 'en-US' } },
+      i18n: { defaultLocale: 'ko', locales: { ko: 'ko-KR' } },
     }),
   ],
 });

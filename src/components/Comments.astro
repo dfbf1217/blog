@@ -35,6 +35,10 @@ const heading = lang === 'ko' ? '댓글' : 'Comments';
       crossorigin="anonymous"
       async
     ></script>
+    <script is:inline>
+      // 토글로 고른 테마가 있으면 giscus도 그 테마로 시작
+      { const t = document.documentElement.dataset.theme; if (t) document.currentScript.previousElementSibling.dataset.theme = t; }
+    </script>
   </section>
 )}
 
