@@ -2,7 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Comments from './Comments.astro';
-import { ui, base, slugOf, readingMinutes, fmtDate, categoryName, type Lang } from '../i18n/ui';
+import { ui, base, slugOf, fmtDate, categoryName, type Lang } from '../i18n/ui';
 const { lang, slug } = Astro.props as { lang: Lang; slug: string };
 const t = ui[lang];
 const all = await getCollection('posts');
@@ -21,8 +21,6 @@ const altPath = alt ? `/posts/${slugOf(alt.id)}/` : undefined;
       <h1>{post.data.title}</h1>
       <div class="meta">
         <time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date, lang)}</time>
-        <span class="dot" />
-        <span>{t.minRead(readingMinutes(post.body, lang))}</span>
       </div>
       {post.data.tags.length > 0 && (
         <div class="tags">{post.data.tags.filter((tag) => tag !== 'intro').map((tag) => <span class="tag">#{tag}</span>)}</div>

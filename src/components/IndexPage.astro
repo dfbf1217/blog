@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import { ui, base, slugOf, readingMinutes, fmtDate, categoryName, type Lang } from '../i18n/ui';
+import { ui, base, slugOf, fmtDate, categoryName, type Lang } from '../i18n/ui';
 const { lang, category } = Astro.props as { lang: Lang; category?: string };
 const t = ui[lang];
 const all = (await getCollection('posts')).filter((p) => p.data.lang === lang);
@@ -32,8 +32,6 @@ const path = category ? `/category/${category}/` : '/';
               {!category && <span class="cat">{categoryName(p.data.category, lang)}</span>}
               {!category && <span class="dot" />}
               <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date, lang)}</time>
-              <span class="dot" />
-              <span>{t.minRead(readingMinutes(p.body, lang))}</span>
             </div>
           </a>
         </li>

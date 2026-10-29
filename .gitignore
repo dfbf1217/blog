@@ -3,3 +3,4 @@ dist
 .astro
 tools/.state.json
 drafts/_inbox
+drafts/_private

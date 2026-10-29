@@ -9,7 +9,6 @@ export const ui = {
     all: '전체',
     categories: '카테고리',
     empty: '아직 글이 없습니다.',
-    minRead: (n: number) => `${n}분`,
     back: '← 글 목록',
   },
   en: {
@@ -20,7 +19,6 @@ export const ui = {
     all: 'All',
     categories: 'Categories',
     empty: 'No posts yet.',
-    minRead: (n: number) => `${n} min read`,
     back: '← All posts',
   },
 } as const;
@@ -32,12 +30,5 @@ export const categoryName = (slug: string, lang: Lang) => categories.find((c) =>
 export const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 export const slugOf = (id: string) => id.split('/').pop()!.replace(/\.md$/, '');
 
-// 한국어는 분당 약 500자, 영어는 분당 약 220단어 기준
-export function readingMinutes(body: string | undefined, lang: Lang) {
-  const text = (body ?? '').replace(/```[\s\S]*?```/g, '').replace(/[#>*_`\-\[\]()]/g, '');
-  const n = lang === 'ko' ? text.replace(/\s/g, '').length / 500 : text.split(/\s+/).length / 220;
-  return Math.max(1, Math.round(n));
-}
-
 export const fmtDate = (d: Date, lang: Lang) =>
-  d.toLocaleDateString(lang === 'ko' ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Seoul' });
+  d.toLocaleString(lang === 'ko' ? 'ko-KR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Seoul' });
